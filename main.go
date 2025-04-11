@@ -9,5 +9,7 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	app.Listen(":3000")
+	if err := app.Listen(":3000"); err != nil {
+		panic(err)
+	}
 }
