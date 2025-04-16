@@ -16,6 +16,7 @@ $(BIN_DIR):
 
 build: $(BIN_DIR)
 	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) -v $(CMD_DIR)/$(SERVICE_BIN)/main.go
+	docker build -t refscaler-service .
 
 fmt:
 	golangci-lint fmt $(SRC_DIR)
@@ -35,7 +36,7 @@ clean:
 	$(GOCLEAN)
 	rm -rf $(BIN_DIR)
 
-run: build
-	./$(BIN_DIR)/$(BINARY_NAME)
+run-service: build
+	./$(BIN_DIR)/$(SERVICE_BIN)
 
-.PHONY: all build lint test clean run test-cover fmt
+.PHONY: all build lint test clean run-service test-cover fmt
