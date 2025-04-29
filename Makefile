@@ -8,6 +8,7 @@ BIN_DIR=bin
 CMD_DIR=cmd
 COVER_DIR=coverage
 SRC_DIR=./...
+VERSION=$(shell cat VERSION)
 
 all: test build
 
@@ -15,8 +16,7 @@ $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
 
 build: $(BIN_DIR)
-	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) -v $(CMD_DIR)/$(SERVICE_BIN)/main.go
-	docker build -t refscaler-service .
+	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) -v -ldflags "-X main.Version=$(VERSION)" $(CMD_DIR)/$(SERVICE_BIN)/main.go
 
 fmt:
 	golangci-lint fmt $(SRC_DIR)
@@ -39,4 +39,8 @@ clean:
 run-service: build
 	./$(BIN_DIR)/$(SERVICE_BIN)
 
-.PHONY: all build lint test clean run-service test-cover fmt
+# Add a target to display the version
+version:
+	@echo $(VERSION)
+
+.PHONY: all build lint test clean run-service test-cover fmt version
