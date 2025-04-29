@@ -1,18 +1,21 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
-import "github.com/grzadr/refscaler/units"
-
-
+import (
+	"github.com/gofiber/fiber/v2"
+	"log"
+	"github.com/grzadr/refscaler-service/internal/routes"
+)
 
 func main() {
+	// Initialize Fiber app
 	app := fiber.New()
 
-	app.Get("/units", func(c *fiber.Ctx) error {
-		return c.SendString(units.EmbeddedUnitRegistry.ToJSON())
-	})
+	// Setup routes
+	routes.SetupRoutes(app)
 
+	// Start server
+	log.Println("Starting server on :3000")
 	if err := app.Listen(":3000"); err != nil {
-		panic(err)
+		log.Fatalf("Server error: %v", err)
 	}
 }
