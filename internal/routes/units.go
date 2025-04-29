@@ -6,8 +6,8 @@ import (
 	"github.com/grzadr/refscaler-service/internal/services"
 )
 
-// SetupRoutes configures all application routes
-func SetupRoutes(app *fiber.App) {
+// SetupUnitsRoutes configures all application routes
+func SetupUnitsRoutes(app *fiber.App) {
 	// Initialize services
 	unitService := services.NewUnitService()
 
