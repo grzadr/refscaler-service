@@ -14,7 +14,9 @@ func SetupUnitsRoutes(app *fiber.App) {
 	// Initialize handlers
 	unitHandler := handlers.NewUnitHandler(unitService)
 
+	units_group := app.Group("/units")
+
 	// Register routes
-	app.Get("/units", unitHandler.GetAllUnits)
-	app.Get("/units/:name", unitHandler.GetUnitByName)
+	units_group.Get("/", unitHandler.GetAllUnits)
+	units_group.Get("/:name", unitHandler.GetUnitByName)
 }
