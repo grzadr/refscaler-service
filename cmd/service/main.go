@@ -16,9 +16,12 @@ func main() {
 
 	// Setup routes
 	routes.SetupUnitsRoutes(app)
+	routes.SetupScalerRoutes(app)
 	routes.SetupGeneralRoutes(app)
 
 	services.SetupService(Version)
+
+	// app.Get("/swagger/*", swagger.HandlerDefault)
 
 	// Start server
 	log.Println("Starting server on :3000")
