@@ -1,0 +1,13 @@
+basePath: /
+host: localhost:3000
+info:
+  contact:
+    email: adrian.grzemski@gmail.com
+    name: Adrian Grzemski
+  description: This is a service for refscaler app
+  license:
+    name: MIT
+  title: RefScaler
+  version: 1.0.0
+paths: {}
+swagger: "2.0"

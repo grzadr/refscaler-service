@@ -1,0 +1,18 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a service for refscaler app",
+        "title": "RefScaler",
+        "contact": {
+            "name": "Adrian Grzemski",
+            "email": "adrian.grzemski@gmail.com"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "paths": {}
+}
