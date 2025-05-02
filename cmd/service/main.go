@@ -5,10 +5,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	_ "github.com/grzadr/refscaler-service/cmd/service/docs"
 	"github.com/grzadr/refscaler-service/internal/routes"
 	"github.com/grzadr/refscaler-service/internal/services"
-
-	_ "github.com/grzadr/refscaler-service/cmd/service/docs"
 )
 
 var Version = ""

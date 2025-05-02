@@ -18,7 +18,7 @@ $(BIN_DIR):
 swag:
 	swag init -g cmd/service/main.go -o cmd/service/docs
 
-build: $(BIN_DIR) swag
+build-service: $(BIN_DIR) swag
 	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) -v -ldflags "-X main.Version=$(VERSION)" $(CMD_DIR)/$(SERVICE_BIN)/main.go
 
 fmt:
@@ -46,4 +46,4 @@ run-service: build
 version:
 	@echo $(VERSION)
 
-.PHONY: all build lint test clean run-service test-cover fmt version swag
+.PHONY: all build-service lint test clean run-service test-cover fmt version swag

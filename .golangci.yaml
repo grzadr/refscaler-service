@@ -12,6 +12,7 @@ formatters:
     golines:
       max-len: 80
       shorten-comments: true
+      reformat-tags: false
 
     # goimports:
     #   # A list of prefixes, which, if set, checks import paths

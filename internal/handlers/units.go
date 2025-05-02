@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	
 	"github.com/gofiber/fiber/v2"
 	"github.com/grzadr/refscaler-service/internal/services"
 )

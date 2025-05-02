@@ -9,10 +9,9 @@ RUN go mod download
 
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
+COPY Makefile .
 
-RUN go test -v ./...
-
-RUN CGO_ENABLED=0 GOOS=linux go build -o /service cmd/service/main.go
+RUN CGO_ENABLED=0 GOOS=linux make
 
 FROM gcr.io/distroless/base-debian12 AS build-release-stage
 

@@ -3,8 +3,9 @@ package services
 import (
 	"maps"
 	"slices"
-	"github.com/grzadr/refscaler/units"
+
 	"github.com/grzadr/refscaler-service/internal/models"
+	"github.com/grzadr/refscaler/units"
 )
 
 // UnitService handles unit registry data access
@@ -25,7 +26,9 @@ func (s *UnitService) GetAllUnits() models.AllUnitsResponse {
 }
 
 // GetUnitGroup retrieves a specific unit group by name
-func (s *UnitService) GetUnitGroup(name string) (models.UnitGroupResponse, bool) {
+func (s *UnitService) GetUnitGroup(
+	name string,
+) (models.UnitGroupResponse, bool) {
 	group, exists := s.Registry[name]
 	if !exists {
 		return nil, false
@@ -35,8 +38,8 @@ func (s *UnitService) GetUnitGroup(name string) (models.UnitGroupResponse, bool)
 
 	for _, unit := range group {
 		response = append(response, models.UnitJSON{
-			Name: unit.Name,
-			Value: unit.Value,
+			Name:    unit.Name,
+			Value:   unit.Value,
 			Aliases: unit.Aliases,
 		})
 	}
