@@ -6,12 +6,26 @@ import (
 	"github.com/grzadr/refscaler-service/internal/services"
 )
 
+// GetVersion returns the current service version
+// @Summary Get service version
+// @Description Returns the current version of the service
+// @Tags general
+// @Produce json
+// @Success 200 {object} models.VersionResponse
+// @Router /version [get]
 func GetVersion(c *fiber.Ctx) error {
-	return c.JSON(fiber.Map{
-		"version": services.GetServiceVersion(),
+	return c.JSON(models.VersionResponse{
+		Version: services.GetServiceVersion(),
 	})
 }
 
+// GetCurrentStatus returns the health status of the service
+// @Summary Get service health
+// @Description Returns the current health status of the service
+// @Tags general
+// @Produce json
+// @Success 200 {object} models.HealthResponse
+// @Router /health [get]
 func GetCurrentStatus(c *fiber.Ctx) error {
 	current := services.GetCurrentStatus()
 

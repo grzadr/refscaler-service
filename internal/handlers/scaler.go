@@ -8,6 +8,16 @@ import (
 	"github.com/grzadr/refscaler-service/internal/services"
 )
 
+// PostScaledEnlistment scales an enlistment based on the provided scale
+// @Summary Scale an enlistment
+// @Description Scales an enlistment based on the provided scale factor
+// @Tags scaler
+// @Accept json
+// @Produce json
+// @Param request body models.EnlistmentRequest true "Enlistment scale request"
+// @Success 200 {object} models.EnlistmentResponse
+// @Failure 400 {object} map[string]string
+// @Router /scale [post]
 func PostScaledEnlistment(c *fiber.Ctx) error {
 	req := new(models.EnlistmentRequest)
 
