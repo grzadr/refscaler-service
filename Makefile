@@ -9,8 +9,9 @@ CMD_DIR=cmd
 COVER_DIR=coverage
 SRC_DIR=./...
 VERSION=$(shell cat VERSION)
+SERVICE_IMAGE=refscaler-service:$(VERSION)
 
-all: test build
+all: test build-service
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
@@ -21,16 +22,24 @@ swag:
 build-service: $(BIN_DIR) swag
 	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) -v -ldflags "-X main.Version=$(VERSION)" $(CMD_DIR)/$(SERVICE_BIN)/main.go
 
+build-image-service: test
+	docker build -t $(SERVICE_IMAGE) --file Service.Dockerfile .
+
+build-images: build-image-service
+
+kind-upload: build-images
+	kind load $(SERVICE_IMAGE)
+
 fmt:
 	golangci-lint fmt $(SRC_DIR)
 
 lint: fmt
 	golangci-lint run
 
-test: lint
+test:
 	$(GOTEST) $(SRC_DIR)
 
-test-cover: test
+test-cover: lint test
 	mkdir -p $(COVER_DIR)
 	$(GOTEST) -coverprofile=$(COVER_DIR)/coverage.out $(SRC_DIR)
 	go tool cover -html=$(COVER_DIR)/coverage.out
@@ -46,4 +55,17 @@ run-service: build
 version:
 	@echo $(VERSION)
 
-.PHONY: all build-service lint test clean run-service test-cover fmt version swag
+.PHONY: \
+	all \
+	build-image-service \
+	build-images \
+	build-service \
+	clean \
+	fmt \
+	kind-upload \
+	lint \
+	run-service \
+	swag \
+	test \
+	test-cover \
+	version
