@@ -20,7 +20,10 @@ swag:
 	swag init -g cmd/service/main.go -o cmd/service/docs
 
 build-service: $(BIN_DIR) swag
-	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) -v -ldflags "-X main.Version=$(VERSION)" $(CMD_DIR)/$(SERVICE_BIN)/main.go
+	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) \
+	-v \
+	-ldflags "-X main.Version=$(VERSION)" \
+	$(CMD_DIR)/$(SERVICE_BIN)/main.go
 
 build-image-service: test
 	docker build -t $(SERVICE_IMAGE) --file Service.Dockerfile .
@@ -28,7 +31,7 @@ build-image-service: test
 build-images: build-image-service
 
 kind-upload: build-images
-	kind load $(SERVICE_IMAGE)
+	kind load docker-image $(SERVICE_IMAGE)
 
 fmt:
 	golangci-lint fmt $(SRC_DIR)
@@ -51,7 +54,6 @@ clean:
 run-service: build
 	./$(BIN_DIR)/$(SERVICE_BIN)
 
-# Add a target to display the version
 version:
 	@echo $(VERSION)
 
