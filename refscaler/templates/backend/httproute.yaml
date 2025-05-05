@@ -8,6 +8,7 @@ metadata:
 spec:
   parentRefs:
   - name: {{ .Values.gateway.gatewayName }}
+    namespace: {{ .Values.gateway.gatewayNamespace }}
     sectionName: {{ .Values.gateway.httpSectionName }}
   hostnames:
   - {{ .Values.gateway.hostname | quote }}
@@ -27,6 +28,7 @@ metadata:
 spec:
   parentRefs:
   - name: {{ .Values.gateway.gatewayName }}
+    namespace: {{ .Values.gateway.gatewayNamespace }}
     sectionName: {{ .Values.gateway.httpsSectionName }}
   hostnames:
   - {{ .Values.gateway.hostname | quote }}
