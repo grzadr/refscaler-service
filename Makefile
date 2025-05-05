@@ -63,9 +63,9 @@ version:
 	@echo $(VERSION)
 
 kind-install: kind-upload
-	kubectl create ns refscaler
-	kubectl label ns refscaler momate-gateway-access=true
-	helm upgrade -i -n $(NAMESPACE) --create-namespace refscaler ./refscaler
+	kubectl get ns $(NAMESPACE) &> /dev/null || kubectl create ns $(NAMESPACE)
+	kubectl label ns $(NAMESPACE) momate-gateway-access=true
+	helm upgrade -i -n $(NAMESPACE) refscaler ./refscaler
 
 .PHONY: \
 	all \
