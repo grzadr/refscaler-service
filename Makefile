@@ -51,7 +51,7 @@ clean:
 	$(GOCLEAN)
 	rm -rf $(BIN_DIR)
 
-run-service: build
+run-service: build-service
 	./$(BIN_DIR)/$(SERVICE_BIN)
 
 version:
