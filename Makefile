@@ -10,6 +10,7 @@ COVER_DIR=coverage
 SRC_DIR=./...
 VERSION=$(shell cat VERSION)
 SERVICE_IMAGE=refscaler-service:$(VERSION)
+NAMESPACE=refscaler
 
 all: setup test build-service
 
@@ -60,6 +61,9 @@ run-service: build-service
 
 version:
 	@echo $(VERSION)
+
+kind-install: kind-upload
+	helm install refscaler -n refscaler --create-namespace ./refscaler
 
 .PHONY: \
 	all \
