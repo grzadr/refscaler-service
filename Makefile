@@ -63,7 +63,7 @@ version:
 	@echo $(VERSION)
 
 kind-install: kind-upload
-	helm install refscaler -n refscaler --create-namespace ./refscaler
+	helm upgrade -i -n $(NAMESPACE) --create-namespace refscaler ./refscaler
 
 .PHONY: \
 	all \
