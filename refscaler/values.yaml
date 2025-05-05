@@ -1,0 +1,43 @@
+# Default values for refscaler
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Backend service configuration
+backend:
+  replicaCount: 1
+
+  image:
+    repository: refscaler-service
+    # Overrides the image tag whose default is the chart appVersion
+    tag: ""
+    pullPolicy: IfNotPresent
+
+  service:
+    type: ClusterIP
+    port: 3000
+    name: refscaler-backend
+
+  resources:
+    limits:
+      cpu: 256m
+      memory: 128Mi
+    requests:
+      cpu: 256m
+      memory: 128Mi
+
+  autoscaling:
+    enabled: true
+    minReplicas: 1
+    maxReplicas: 3
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+# Gateway configuration
+gateway:
+  enabled: true
+  hostname: "refscaler.momato.xyz"
+  gatewayName: "momato-gateway-tls"
+  httpsSectionName: "https"
+  httpSectionName: "http"
+  apiPathPrefix: "/api"
