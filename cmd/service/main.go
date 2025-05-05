@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"os"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
@@ -30,13 +32,17 @@ func main() {
 
 	services.SetupService(Version)
 
-	docs.SwaggerInfo.Host = ""
+	hostname, found := os.LookupEnv("SWAGGER_HOST")
+
+	if !found {
+		hostname = "localhost:3000"
+	}
 
 	//app.Get("/swagger/*", swagger.HandlerDefault)
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 	    DeepLinking: true,
 	    // Use a relative URL, not an absolute one
-	    URL: "./doc.json",
+	    URL: fmt.Sprintf("%s/swagger/doc.json", hostname),
 	    // Optional improvements
 	    DocExpansion: "list",
 	}))

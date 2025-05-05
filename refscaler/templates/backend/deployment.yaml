@@ -21,6 +21,9 @@ spec:
         - name: {{ .Chart.Name }}-backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          env:
+          - name: SWAGGER_HOST
+            value: {{ .Values.gateway.hostname | quote }}
           ports:
             - name: http
               containerPort: 3000
