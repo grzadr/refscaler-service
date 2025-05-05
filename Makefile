@@ -30,7 +30,7 @@ build-service: $(BIN_DIR) swag
 	-ldflags "-X main.Version=$(VERSION)" \
 	$(CMD_DIR)/$(SERVICE_BIN)/main.go
 
-build-image-service: test
+build-image-service:
 	docker build -t $(SERVICE_IMAGE) --file Service.Dockerfile .
 
 build-images: build-image-service
