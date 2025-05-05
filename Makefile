@@ -11,10 +11,14 @@ SRC_DIR=./...
 VERSION=$(shell cat VERSION)
 SERVICE_IMAGE=refscaler-service:$(VERSION)
 
-all: test build-service
+all: setup test build-service
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
+
+setup:
+	go mod download
+	go install github.com/swaggo/swag/cmd/swag@latest
 
 swag:
 	swag init -g cmd/service/main.go -o cmd/service/docs
@@ -67,6 +71,7 @@ version:
 	kind-upload \
 	lint \
 	run-service \
+	setup \
 	swag \
 	test \
 	test-cover \

@@ -4,15 +4,10 @@ FROM golang:1.24.2 AS build-stage
 
 WORKDIR /app
 
-COPY go.mod go.sum ./
-RUN go mod download
+COPY go.mod go.sum Makefile VERSION ./
 
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
-COPY Makefile .
-COPY VERSION .
-
-RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 RUN CGO_ENABLED=0 GOOS=linux make
 
