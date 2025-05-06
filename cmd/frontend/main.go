@@ -31,7 +31,14 @@ func main() {
 	app.Use(logger.New())
 
 	// Serve static files
-	app.Static("/static", staticPath)
+	// app.Static("/static", staticPath)
+	app.Static("/static", staticPath, fiber.Static{
+		MaxAge: 31536000, // 1 year in seconds
+		ModifyResponse: func(c *fiber.Ctx) error {
+			c.Set("Cache-Control", "max-age=31536000, immutable")
+			return nil
+		},
+	})
 
 	// Get backend URL from environment or use default
 	backendURL := internal.DefaultEnv("BACKEND_URL", "http://localhost:3000")
