@@ -43,6 +43,11 @@ func main() {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
+	app.Get("/robots.txt", func(c *fiber.Ctx) error {
+		c.Set("Content-Type", "text/plain")
+		return c.SendString(`User-agent: *\nAllow: /`)
+	})
+
 	port := internal.DefaultEnv("PORT", "3000")
 
 	log.Printf("Starting frontend on :%s", port)

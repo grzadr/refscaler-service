@@ -40,6 +40,13 @@ func main() {
 		},
 	})
 
+	app.Get("/robots.txt", func(c *fiber.Ctx) error {
+		c.Set("Content-Type", "text/plain")
+		return c.SendString(`User-agent: *
+	Allow: /
+	`)
+	})
+
 	// Get backend URL from environment or use default
 	backendURL := internal.DefaultEnv("BACKEND_URL", "http://localhost:3000")
 	log.Printf("Using backend URL: %s", backendURL)
