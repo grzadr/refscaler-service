@@ -4,8 +4,8 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/swagger"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/swagger"
 	docs "github.com/grzadr/refscaler-service/cmd/service/docs"
 	"github.com/grzadr/refscaler-service/internal"
 	"github.com/grzadr/refscaler-service/internal/routes"

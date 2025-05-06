@@ -56,7 +56,7 @@ kind-upload: build-images
 setup-linter:
 	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
 
-fmt: setup-linter
+fmt:
 	golangci-lint fmt $(SRC_DIR)
 
 lint: fmt
