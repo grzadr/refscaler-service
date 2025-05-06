@@ -22,14 +22,14 @@ func GetScaled(enlistment_query string, scale_query string) ([]string, error) {
 		units.EmbeddedUnitRegistry,
 	)
 	if err != nil {
-		log.Fatalf("failed to create enlistments: %s", err)
+		log.Printf("failed to create enlistments: %s", err)
 		return nil, ErrEnlistmentCreate
 	}
 	log.Printf("loaded %d items", enlistment.Length())
 
 	scale, err := enlistment.MakeMeasureValue(scale_query)
 	if err != nil {
-		log.Fatalf("failed to convert '%s': %s", scale_query, err)
+		log.Printf("failed to convert '%s': %s", scale_query, err)
 		return nil, ErrScaleConvert
 	}
 	log.Printf("scaling to %s", scale_query)

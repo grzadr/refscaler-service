@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html/v2"
 	"github.com/grzadr/refscaler-service/internal"
 	"github.com/grzadr/refscaler-service/internal/handlers"
@@ -17,17 +18,24 @@ func main() {
 	viewsPath := internal.DefaultEnv("VIEWS_PATH", "./assets/views")
 	staticPath := internal.DefaultEnv("STATIC_PATH", "./assets/static")
 
+	log.Printf("Using views path: %s", viewsPath)
+	log.Printf("Using static path: %s", staticPath)
+
 	engine := html.New(viewsPath, ".html")
 
 	app := fiber.New(fiber.Config{
 		Views: engine,
 	})
 
+	// Add logger middleware for better debugging
+	app.Use(logger.New())
+
 	// Serve static files
 	app.Static("/static", staticPath)
 
 	// Get backend URL from environment or use default
 	backendURL := internal.DefaultEnv("BACKEND_URL", "http://localhost:3000")
+	log.Printf("Using backend URL: %s", backendURL)
 
 	// Create a new handler with the backend URL
 	handler := handlers.NewHandler(backendURL)

@@ -18,7 +18,7 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Add a flex container to ensure side-by-side layout */
+/* Use flex layout to ensure side-by-side content */
 .content-wrapper {
     display: flex;
     justify-content: space-between;
@@ -75,13 +75,37 @@ textarea {
     min-height: 300px;
 }
 
+/* Improved error styling */
 .error {
     color: #d9534f;
+    font-weight: normal;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.error p {
+    margin: 0;
+}
+
+.error strong {
     font-weight: bold;
 }
 
 .success {
     color: #333;
+}
+
+.success p {
+    margin: 0 0 8px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.success p:last-child {
+    border-bottom: none;
 }
 
 .hint {

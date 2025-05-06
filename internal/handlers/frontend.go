@@ -1,4 +1,4 @@
-// cmd/frontend/handlers/handler.go
+// internal/handlers/handler.go
 package handlers
 
 import (
@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	"github.com/gofiber/fiber/v2"
@@ -37,11 +38,18 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 	enlistment := c.FormValue("enlistment")
 	scale := c.FormValue("scale")
 
+	// Log the received values for debugging
+	log.Printf(
+		"Received scale request - Scale: %s, Enlistment: %s",
+		scale,
+		enlistment,
+	)
+
 	if enlistment == "" || scale == "" {
-		return c.Status(fiber.StatusBadRequest).
-			Render("partials/results", fiber.Map{
-				"Error": "Both enlistment and scale must be provided",
-			})
+		log.Printf("Missing required fields")
+		return c.Render("partials/results", fiber.Map{
+			"Error": "Both enlistment and scale must be provided",
+		})
 	}
 
 	// Create request to backend
@@ -53,60 +61,88 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 	// Convert to JSON
 	requestBody, err := json.Marshal(request)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).
-			Render("partials/results", fiber.Map{
-				"Error": "Failed to marshal request",
-			})
+		log.Printf("Error marshaling request: %v", err)
+		return c.Render("partials/results", fiber.Map{
+			"Error": "Failed to marshal request",
+		})
 	}
 
 	// Send request to backend
+	backendURL := fmt.Sprintf("%s/scale", h.backendURL)
+	log.Printf("Sending request to backend: %s", backendURL)
+
 	resp, err := http.Post(
-		fmt.Sprintf("%s/scale", h.backendURL),
+		backendURL,
 		"application/json",
 		bytes.NewBuffer(requestBody),
 	)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).
-			Render("partials/results", fiber.Map{
-				"Error": fmt.Sprintf(
-					"Failed to communicate with backend: %v",
-					err,
-				),
-			})
+		log.Printf("Error communicating with backend: %v", err)
+		return c.Render("partials/results", fiber.Map{
+			"Error": fmt.Sprintf("Failed to communicate with backend: %v", err),
+		})
 	}
-	defer resp.Body.Close()
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			log.Printf("Error closing response body: %v", closeErr)
+		}
+	}()
 
 	// Read response
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return c.Status(fiber.StatusInternalServerError).
-			Render("partials/results", fiber.Map{
-				"Error": "Failed to read response from backend",
-			})
+		log.Printf("Error reading response body: %v", err)
+		return c.Render("partials/results", fiber.Map{
+			"Error": "Failed to read response from backend",
+		})
 	}
+
+	log.Printf(
+		"Response from backend (status %d): %s",
+		resp.StatusCode,
+		string(respBody),
+	)
 
 	// Check for error
 	if resp.StatusCode != http.StatusOK {
+		log.Printf("Backend returned error status: %d", resp.StatusCode)
+
+		// Try to parse structured error response
 		var errorResp map[string]string
 		if err := json.Unmarshal(respBody, &errorResp); err != nil {
-			return c.Status(fiber.StatusInternalServerError).
-				Render("partials/results", fiber.Map{
-					"Error": fmt.Sprintf("Backend error: %s", respBody),
-				})
+			// If we can't parse the error JSON, use the raw response
+			log.Printf("Could not parse error response: %v", err)
+			errorMessage := fmt.Sprintf("Backend error: %s", string(respBody))
+			log.Printf("Error message: %s", errorMessage)
+			return c.Render("partials/results", fiber.Map{
+				"Error": errorMessage,
+			})
 		}
-		return c.Status(resp.StatusCode).Render("partials/results", fiber.Map{
-			"Error": fmt.Sprintf("Backend error: %s", errorResp["error"]),
+
+		// Use error from structured response
+		errorMessage := fmt.Sprintf("Backend error: %s", errorResp["error"])
+		if details, ok := errorResp["details"]; ok && details != "" {
+			errorMessage += fmt.Sprintf(" - %s", details)
+		}
+		log.Printf("Structured error: %s", errorMessage)
+		return c.Render("partials/results", fiber.Map{
+			"Error": errorMessage,
 		})
 	}
 
 	// Parse response
 	var response models.EnlistmentResponse
 	if err := json.Unmarshal(respBody, &response); err != nil {
-		return c.Status(fiber.StatusInternalServerError).
-			Render("partials/results", fiber.Map{
-				"Error": "Failed to parse response from backend",
-			})
+		log.Printf("Error unmarshaling response: %v", err)
+		return c.Render("partials/results", fiber.Map{
+			"Error": "Failed to parse response from backend",
+		})
 	}
+
+	log.Printf(
+		"Successfully processed request, returning %d results",
+		len(response.Scaled),
+	)
 
 	// Return results partial
 	return c.Render("partials/results", fiber.Map{
