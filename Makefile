@@ -53,7 +53,10 @@ kind-upload: build-images
 	kind load docker-image $(SERVICE_IMAGE)
 	kind load docker-image $(FRONTEND_IMAGE)
 
-fmt:
+setup-linter:
+	go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@latest
+
+fmt: setup-linter
 	golangci-lint fmt $(SRC_DIR)
 
 lint: fmt
@@ -95,6 +98,7 @@ kind-install: kind-upload
 	run-frontend \
 	run-service \
 	setup \
+	setup-linter \
 	swa-service \
 	test \
 	test-cover \
