@@ -15,8 +15,8 @@ var Version = ""
 
 func main() {
 	// Initialize the HTML template engine
-	viewsPath := internal.DefaultEnv("VIEWS_PATH", "./assets/views")
-	staticPath := internal.DefaultEnv("STATIC_PATH", "./assets/static")
+	viewsPath := internal.DefaultEnv("VIEWS_PATH", "/assets/views")
+	staticPath := internal.DefaultEnv("STATIC_PATH", "/assets/static")
 
 	log.Printf("Using views path: %s", viewsPath)
 	log.Printf("Using static path: %s", staticPath)
