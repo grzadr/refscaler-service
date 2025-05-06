@@ -2,31 +2,24 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
 	docs "github.com/grzadr/refscaler-service/cmd/service/docs"
+	"github.com/grzadr/refscaler-service/internal"
 	"github.com/grzadr/refscaler-service/internal/routes"
 	"github.com/grzadr/refscaler-service/internal/services"
 )
 
 var Version = ""
 
-func DefaultEnv(key, value string) string {
-	env, found := os.LookupEnv(key)
-
-	if !found {
-		return value
-	}
-
-	return env
-}
-
 func updateSwaggerDocs() {
 	docs.SwaggerInfo.Version = Version
-	docs.SwaggerInfo.Host = DefaultEnv("API_URL_BASE", "localhost:3000")
-	docs.SwaggerInfo.BasePath = DefaultEnv("API_URL_PREFIX", "/")
+	docs.SwaggerInfo.Host = internal.DefaultEnv(
+		"API_URL_BASE",
+		"localhost:3000",
+	)
+	docs.SwaggerInfo.BasePath = internal.DefaultEnv("API_URL_PREFIX", "/")
 }
 
 // @title RefScaler
@@ -47,8 +40,10 @@ func main() {
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
 
-	log.Println("Starting server on :3000")
-	if err := app.Listen(":3000"); err != nil {
+	port := internal.DefaultEnv("PORT", "3000")
+
+	log.Printf("Starting frontend on :%s", port)
+	if err := app.Listen(":" + port); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
 }

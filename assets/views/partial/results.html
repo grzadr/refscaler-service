@@ -1,0 +1,14 @@
+<!-- internal/frontend/views/partials/results.html -->
+{{if .Error}}
+<div class="error">
+    <p>{{.Error}}</p>
+</div>
+{{else if .Results}}
+<div class="success">
+    {{range .Results}}
+    <p>{{.}}</p>
+    {{end}}
+</div>
+{{else}}
+<p class="hint">No results found</p>
+{{end}}

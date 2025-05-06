@@ -11,6 +11,7 @@ SRC_DIR=./...
 VERSION=$(shell cat VERSION)
 SERVICE_IMAGE=refscaler-service:$(VERSION)
 NAMESPACE=refscaler
+FRONTEND_BIN=frontend
 
 all: setup test build-images
 
@@ -19,9 +20,18 @@ $(BIN_DIR):
 
 setup:
 	go mod download
-	go install github.com/swaggo/swag/cmd/swag@latest
+
+build-frontend: $(BIN_DIR) setup
+	$(GOBUILD) -o $(BIN_DIR)/$(FRONTEND_BIN) \
+	-v \
+	-ldflags "-X main.Version=$(VERSION)" \
+	$(CMD_DIR)/$(FRONTEND_BIN)/main.go
+
+run-frontend: build-frontend
+	./$(BIN_DIR)/$(FRONTEND_BIN)
 
 swag-service:
+	go install github.com/swaggo/swag/cmd/swag@latest
 	swag init -g cmd/service/main.go -o cmd/service/docs
 
 build-service: $(BIN_DIR) setup swag-service
@@ -69,6 +79,7 @@ kind-install: kind-upload
 
 .PHONY: \
 	all \
+	build-frontend \
 	build-image-service \
 	build-images \
 	build-service \
@@ -76,6 +87,7 @@ kind-install: kind-upload
 	fmt \
 	kind-upload \
 	lint \
+	run-frontend \
 	run-service \
 	setup \
 	swa-service \
