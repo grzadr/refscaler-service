@@ -8,6 +8,7 @@ COPY go.mod go.sum Makefile VERSION ./
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 COPY assets/ ./assets/
+COPY assets/partials ./assets/partials
 
 RUN CGO_ENABLED=0 GOOS=linux make build-frontend
 
