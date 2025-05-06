@@ -20,7 +20,6 @@ var Version = ""
 // @contact.name Adrian Grzemski
 // @contact.email adrian.grzemski@gmail.com
 // @license.name MIT
-// @BasePath /
 func main() {
 	// Initialize Fiber app
 	app := fiber.New()
@@ -45,6 +44,7 @@ func main() {
 	    URL: fmt.Sprintf("%s/swagger/doc.json", api_base_url),
 	    // Optional improvements
 	    DocExpansion: "list",
+
 	}))
 
 	// Start server
