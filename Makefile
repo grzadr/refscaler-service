@@ -12,6 +12,7 @@ VERSION=$(shell cat VERSION)
 SERVICE_IMAGE=refscaler-service:$(VERSION)
 NAMESPACE=refscaler
 FRONTEND_BIN=frontend
+FRONTEND_IMAGE=refscaler-frontend:$(VERSION)
 
 all: setup test build-images
 
@@ -40,13 +41,17 @@ build-service: $(BIN_DIR) setup swag-service
 	-ldflags "-X main.Version=$(VERSION)" \
 	$(CMD_DIR)/$(SERVICE_BIN)/main.go
 
-build-image-service:
+build-image-service: lint
 	docker build -t $(SERVICE_IMAGE) --file Service.Dockerfile .
+
+build-image-frontend: lint
+	docker build -t $(FRONTEND_IMAGE) --file Frontend.Dockerfile .
 
 build-images: build-image-service
 
 kind-upload: build-images
 	kind load docker-image $(SERVICE_IMAGE)
+	kind load docker-image $(FRONTEND_IMAGE)
 
 fmt:
 	golangci-lint fmt $(SRC_DIR)
