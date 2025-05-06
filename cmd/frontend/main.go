@@ -44,7 +44,7 @@ func main() {
 	app.Get("/", handler.Index)
 
 	// API routes for HTMX interactions
-	app.Post("/api/scale", handler.Scale)
+	app.Post("/form/scale", handler.Scale)
 
 	port := internal.DefaultEnv("PORT", "8080")
 	log.Printf("Starting frontend on :%s", port)

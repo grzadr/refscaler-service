@@ -1,12 +1,10 @@
-<!-- internal/frontend/views/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{.Title}}</title>
-    <!-- Make sure HTMX is loaded properly -->
+    <title>RefScaler</title>
     <script src="https://unpkg.com/htmx.org@1.9.10"
         integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
         crossorigin="anonymous"></script>
@@ -18,8 +16,7 @@
         <h1>RefScaler</h1>
         <div class="content-wrapper">
             <div class="scale-form">
-                <form id="scaleForm" hx-post="/api/scale" hx-target="#results-content" hx-swap="innerHTML"
-                    hx-headers='{"Accept": "text/html"}'>
+                <form id="scaleForm" hx-post="/form/scale" hx-target="#results-content" hx-swap="innerHTML">
                     <div class="form-group">
                         <label for="scale">Scale:</label>
                         <input type="text" id="scale" name="scale" placeholder="e.g., 1 minute" value="1 minute">
@@ -42,26 +39,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Add debug console to help troubleshoot -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Log when the page loads
-            console.log('Page loaded');
-
-            // Add event listener to the form for debugging
-            document.getElementById('scaleForm').addEventListener('submit', function (e) {
-                console.log('Form submitted');
-            });
-
-            // Check if HTMX is loaded properly
-            if (typeof htmx !== 'undefined') {
-                console.log('HTMX loaded successfully');
-            } else {
-                console.error('HTMX not loaded!');
-            }
-        });
-    </script>
 </body>
 
 </html>
