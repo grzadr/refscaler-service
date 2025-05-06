@@ -66,5 +66,6 @@ Create a full API path by combining hostname and API prefix.
 Create the backend service URL for the frontend to use
 */}}
 {{- define "refscaler.backendServiceUrl" -}}
-{{- printf "http://%s-%s:%d" (include "refscaler.fullname" .) "backend" .Values.backend.service.port -}}
+{{- $port := .Values.backend.service.port | int -}}
+{{- printf "http://%s-%s:%d" (include "refscaler.fullname" .) "backend" $port -}}
 {{- end -}}
