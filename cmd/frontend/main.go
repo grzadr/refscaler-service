@@ -47,9 +47,7 @@ func main() {
 
 	app.Get("/robots.txt", func(c *fiber.Ctx) error {
 		c.Set("Content-Type", "text/plain")
-		return c.SendString(`User-agent: *
-	Allow: /
-	`)
+		return c.SendString(`User-agent: *\nAllow: /`)
 	})
 
 	// Get backend URL from environment or use default
