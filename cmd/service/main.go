@@ -35,10 +35,8 @@ func updateSwaggerDocs() {
 // @contact.email adrian.grzemski@gmail.com
 // @license.name MIT
 func main() {
-	// Initialize Fiber app
 	app := fiber.New()
 
-	// Setup routes
 	routes.SetupUnitsRoutes(app)
 	routes.SetupScalerRoutes(app)
 	routes.SetupGeneralRoutes(app)
