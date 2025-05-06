@@ -17,6 +17,7 @@ WORKDIR /
 
 COPY --from=build-stage /app/bin/frontend /frontend
 COPY --from=build-stage /app/assets/ /assets/
+COPY --from=build-stage /app/assets/partials /assets/partials
 ENV PORT=8080
 EXPOSE 8080
 
