@@ -5,6 +5,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	docs "github.com/grzadr/refscaler-service/cmd/service/docs"
 	"github.com/grzadr/refscaler-service/internal"
 	"github.com/grzadr/refscaler-service/internal/routes"
@@ -29,6 +30,8 @@ func updateSwaggerDocs() {
 // @license.name MIT
 func main() {
 	app := fiber.New()
+
+	app.Use(logger.New())
 
 	routes.SetupUnitsRoutes(app)
 	routes.SetupScalerRoutes(app)
