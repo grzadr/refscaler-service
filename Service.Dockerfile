@@ -9,7 +9,7 @@ COPY go.mod go.sum Makefile VERSION ./
 COPY cmd/ ./cmd/
 COPY internal/ ./internal/
 
-RUN CGO_ENABLED=0 GOOS=linux make
+RUN CGO_ENABLED=0 GOOS=linux make build-service
 
 FROM gcr.io/distroless/base-debian12 AS build-release-stage
 

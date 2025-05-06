@@ -12,7 +12,7 @@ VERSION=$(shell cat VERSION)
 SERVICE_IMAGE=refscaler-service:$(VERSION)
 NAMESPACE=refscaler
 
-all: setup test build-service
+all: setup test build-images
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
@@ -21,10 +21,10 @@ setup:
 	go mod download
 	go install github.com/swaggo/swag/cmd/swag@latest
 
-swag:
+swag-service:
 	swag init -g cmd/service/main.go -o cmd/service/docs
 
-build-service: $(BIN_DIR) swag
+build-service: $(BIN_DIR) setup swag-service
 	$(GOBUILD) -o $(BIN_DIR)/$(SERVICE_BIN) \
 	-v \
 	-ldflags "-X main.Version=$(VERSION)" \
@@ -78,7 +78,7 @@ kind-install: kind-upload
 	lint \
 	run-service \
 	setup \
-	swag \
+	swa-service \
 	test \
 	test-cover \
 	version
