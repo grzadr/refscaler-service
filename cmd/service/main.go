@@ -1,7 +1,6 @@
 package main
 
 import (
-	// "fmt"
 	"log"
 	"os"
 
@@ -14,22 +13,20 @@ import (
 
 var Version = ""
 
+func DefaultEnv(key, value string) string {
+	env, found := os.LookupEnv(key)
+
+	if !found {
+		return value
+	}
+
+	return env
+}
+
 func updateSwaggerDocs() {
-	apiUrlBase, found := os.LookupEnv("API_URL_BASE")
-
-	if !found {
-		apiUrlBase = "localhost:3000"
-	}
-
-	apiUrlPrefix, found := os.LookupEnv("API_URL_PREFIX")
-
-	if !found {
-		apiUrlPrefix = "/"
-	}
-
 	docs.SwaggerInfo.Version = Version
-	docs.SwaggerInfo.Host = apiUrlBase
-	docs.SwaggerInfo.BasePath = apiUrlPrefix
+	docs.SwaggerInfo.Host = DefaultEnv("API_URL_BASE", "localhost:3000")
+	docs.SwaggerInfo.BasePath = DefaultEnv("API_URL_PREFIX", "/")
 }
 
 // @title RefScaler
@@ -51,15 +48,7 @@ func main() {
 	updateSwaggerDocs()
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
-	// app.Get("/swagger/*", swagger.New(swagger.Config{
-	// 	DeepLinking: true,
-	// 	// Use a relative URL, not an absolute one
-	// 	URL: "./doc.json",
-	// 	// Optional improvements
-	// 	DocExpansion: "list",
-	// }))
 
-	// Start server
 	log.Println("Starting server on :3000")
 	if err := app.Listen(":3000"); err != nil {
 		log.Fatalf("Server error: %v", err)
