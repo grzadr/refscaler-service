@@ -46,4 +46,11 @@ spec:
     backendRefs:
     - name: {{ include "refscaler.fullname" . }}-backend
       port: {{ .Values.backend.service.port }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: "/swagger"
+    backendRefs:
+    - name: {{ include "refscaler.fullname" . }}-backend
+      port: {{ .Values.backend.service.port }}
 {{- end }}
