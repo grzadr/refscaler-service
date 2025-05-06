@@ -3,19 +3,35 @@ package main
 import (
 	"log"
 	"os"
-	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
-	_ "github.com/grzadr/refscaler-service/cmd/service/docs"
+	docs "github.com/grzadr/refscaler-service/cmd/service/docs"
 	"github.com/grzadr/refscaler-service/internal/routes"
 	"github.com/grzadr/refscaler-service/internal/services"
 )
 
 var Version = ""
 
+func updateSwaggerDocs() {
+	apiUrlBase, found := os.LookupEnv("API_URL_BASE")
+
+	if !found {
+		apiUrlBase = "localhost:3000"
+	}
+
+	apiUrlPrefix, found := os.LookupEnv("API_URL_PREFIX")
+
+	if !found {
+		apiUrlBase = "/"
+	}
+
+	docs.SwaggerInfo.Version = Version
+	docs.SwaggerInfo.Host = apiUrlBase
+	docs.SwaggerInfo.BasePath = apiUrlPrefix
+}
+
 // @title RefScaler
-// @version 1.0.0
 // @description This is a service for refscaler app
 // @contact.name Adrian Grzemski
 // @contact.email adrian.grzemski@gmail.com
@@ -31,21 +47,17 @@ func main() {
 
 	services.SetupService(Version)
 
-	api_base_url, found := os.LookupEnv("API_BASE_URL")
+	updateSwaggerDocs()
 
-	if !found {
-		api_base_url = "localhost:3000"
-	}
+	app.Get("/swagger/*", swagger.HandlerDefault)
+	// app.Get("/swagger/*", swagger.New(swagger.Config{
+	//     DeepLinking: true,
+	//     // Use a relative URL, not an absolute one
+	//     URL: fmt.Sprintf("%s/swagger/doc.json", apiBaseUrl),
+	//     // Optional improvements
+	//     DocExpansion: "list",
 
-	//app.Get("/swagger/*", swagger.HandlerDefault)
-	app.Get("/swagger/*", swagger.New(swagger.Config{
-	    DeepLinking: true,
-	    // Use a relative URL, not an absolute one
-	    URL: fmt.Sprintf("%s/swagger/doc.json", api_base_url),
-	    // Optional improvements
-	    DocExpansion: "list",
-
-	}))
+	// }))
 
 	// Start server
 	log.Println("Starting server on :3000")
