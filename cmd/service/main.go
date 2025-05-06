@@ -1,6 +1,7 @@
 package main
 
 import (
+	// "fmt"
 	"log"
 	"os"
 
@@ -50,14 +51,13 @@ func main() {
 	updateSwaggerDocs()
 
 	app.Get("/swagger/*", swagger.HandlerDefault)
-	// app.Get("/swagger/*", swagger.New(swagger.Config{
-	//     DeepLinking: true,
-	//     // Use a relative URL, not an absolute one
-	//     URL: fmt.Sprintf("%s/swagger/doc.json", apiBaseUrl),
-	//     // Optional improvements
-	//     DocExpansion: "list",
-
-	// }))
+	app.Get("/swagger/*", swagger.New(swagger.Config{
+		DeepLinking: true,
+		// Use a relative URL, not an absolute one
+		URL: "./swagger/doc.json",
+		// Optional improvements
+		DocExpansion: "list",
+	}))
 
 	// Start server
 	log.Println("Starting server on :3000")
