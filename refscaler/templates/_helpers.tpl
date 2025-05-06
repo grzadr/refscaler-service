@@ -49,3 +49,15 @@ Selector labels
 app.kubernetes.io/name: {{ include "refscaler.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create a full API path by combining hostname and API prefix.
+*/}}
+{{- define "refscaler.apiPath" -}}
+{{- $hostname := .Values.gateway.hostname -}}
+{{- $apiPrefix := .Values.gateway.apiPathPrefix | default "/api" -}}
+{{- if not (hasPrefix "/" $apiPrefix) -}}
+{{- $apiPrefix = printf "/%s" $apiPrefix -}}
+{{- end -}}
+{{- printf "https://%s%s" $hostname $apiPrefix -}}
+{{- end -}}

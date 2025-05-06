@@ -32,17 +32,17 @@ func main() {
 
 	services.SetupService(Version)
 
-	hostname, found := os.LookupEnv("SWAGGER_HOST")
+	api_base_url, found := os.LookupEnv("API_BASE_URL")
 
 	if !found {
-		hostname = "localhost:3000"
+		api_base_url = "localhost:3000"
 	}
 
 	//app.Get("/swagger/*", swagger.HandlerDefault)
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 	    DeepLinking: true,
 	    // Use a relative URL, not an absolute one
-	    URL: fmt.Sprintf("%s/swagger/doc.json", hostname),
+	    URL: fmt.Sprintf("%s/swagger/doc.json", api_base_url),
 	    // Optional improvements
 	    DocExpansion: "list",
 	}))
