@@ -24,7 +24,7 @@ func updateSwaggerDocs() {
 	apiUrlPrefix, found := os.LookupEnv("API_URL_PREFIX")
 
 	if !found {
-		apiUrlBase = "/"
+		apiUrlPrefix = "/"
 	}
 
 	docs.SwaggerInfo.Version = Version
@@ -50,11 +50,11 @@ func main() {
 
 	updateSwaggerDocs()
 
-	app.Get("/swagger/*", swagger.HandlerDefault)
+	// app.Get("/swagger/*", swagger.HandlerDefault)
 	app.Get("/swagger/*", swagger.New(swagger.Config{
 		DeepLinking: true,
 		// Use a relative URL, not an absolute one
-		URL: "./swagger/doc.json",
+		URL: "./doc.json",
 		// Optional improvements
 		DocExpansion: "list",
 	}))
