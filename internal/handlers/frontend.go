@@ -47,6 +47,7 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 
 	if enlistment == "" || scale == "" {
 		log.Printf("Missing required fields")
+		c.Set("Content-Type", "text/html; charset=utf-8")
 		return c.Render("partials/results", fiber.Map{
 			"Error": "Both enlistment and scale must be provided",
 		})
@@ -62,6 +63,7 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 	requestBody, err := json.Marshal(request)
 	if err != nil {
 		log.Printf("Error marshaling request: %v", err)
+		c.Set("Content-Type", "text/html; charset=utf-8")
 		return c.Render("partials/results", fiber.Map{
 			"Error": "Failed to marshal request",
 		})
@@ -78,6 +80,7 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 	)
 	if err != nil {
 		log.Printf("Error communicating with backend: %v", err)
+		c.Set("Content-Type", "text/html; charset=utf-8")
 		return c.Render("partials/results", fiber.Map{
 			"Error": fmt.Sprintf("Failed to communicate with backend: %v", err),
 		})
@@ -92,6 +95,7 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Printf("Error reading response body: %v", err)
+		c.Set("Content-Type", "text/html; charset=utf-8")
 		return c.Render("partials/results", fiber.Map{
 			"Error": "Failed to read response from backend",
 		})
@@ -114,6 +118,7 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 			log.Printf("Could not parse error response: %v", err)
 			errorMessage := fmt.Sprintf("Backend error: %s", string(respBody))
 			log.Printf("Error message: %s", errorMessage)
+			c.Set("Content-Type", "text/html; charset=utf-8")
 			return c.Render("partials/results", fiber.Map{
 				"Error": errorMessage,
 			})
@@ -125,6 +130,7 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 			errorMessage += fmt.Sprintf(" - %s", details)
 		}
 		log.Printf("Structured error: %s", errorMessage)
+		c.Set("Content-Type", "text/html; charset=utf-8")
 		return c.Render("partials/results", fiber.Map{
 			"Error": errorMessage,
 		})
@@ -134,18 +140,42 @@ func (h *Handler) Scale(c *fiber.Ctx) error {
 	var response models.EnlistmentResponse
 	if err := json.Unmarshal(respBody, &response); err != nil {
 		log.Printf("Error unmarshaling response: %v", err)
+		log.Printf("Raw response body: %s", string(respBody))
+		c.Set("Content-Type", "text/html; charset=utf-8")
 		return c.Render("partials/results", fiber.Map{
 			"Error": "Failed to parse response from backend",
 		})
 	}
 
 	log.Printf(
-		"Successfully processed request, returning %d results",
+		"Successfully processed request, returning %d results: %+v",
 		len(response.Scaled),
+		response.Scaled,
 	)
 
-	// Return results partial
-	return c.Render("partials/results", fiber.Map{
+	// Explicitly set content type to HTML
+	c.Set("Content-Type", "text/html; charset=utf-8")
+
+	// Attempt to render template
+	renderErr := c.Render("partials/results", fiber.Map{
 		"Results": response.Scaled,
 	})
+
+	// If template rendering fails, provide fallback rendering
+	if renderErr != nil {
+		log.Printf("Template rendering error: %v", renderErr)
+		log.Printf("Template path: /assets/views/partials/results.html")
+		log.Printf("Template data: %+v", response.Scaled)
+
+		// Create a simple HTML fallback
+		html := "<div class='success'>"
+		for _, result := range response.Scaled {
+			html += fmt.Sprintf("<p>%s</p>", result)
+		}
+		html += "</div>"
+
+		return c.SendString(html)
+	}
+
+	return nil
 }

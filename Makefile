@@ -83,7 +83,7 @@ version:
 kind-install: kind-upload
 	kubectl get ns $(NAMESPACE) &> /dev/null || kubectl create ns $(NAMESPACE)
 	kubectl label ns $(NAMESPACE) momate-gateway-access=true
-	helm upgrade -i -n $(NAMESPACE) refscaler ./refscaler
+	helm upgrade -i -n $(NAMESPACE) refscaler ./refscaler --force --wait
 
 .PHONY: \
 	all \

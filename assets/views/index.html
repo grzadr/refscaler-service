@@ -18,7 +18,8 @@
         <h1>RefScaler</h1>
         <div class="content-wrapper">
             <div class="scale-form">
-                <form id="scaleForm" hx-post="/api/scale" hx-target="#results-content" hx-swap="innerHTML">
+                <form id="scaleForm" hx-post="/api/scale" hx-target="#results-content" hx-swap="innerHTML"
+                    hx-headers='{"Accept": "text/html"}'>
                     <div class="form-group">
                         <label for="scale">Scale:</label>
                         <input type="text" id="scale" name="scale" placeholder="e.g., 1 minute" value="1 minute">
