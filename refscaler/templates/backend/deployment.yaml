@@ -23,7 +23,7 @@ spec:
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           env:
           - name: API_BASE_URL
-            value: {{ include "refscaler.apiPath" | quote }}
+            value: {{ include "refscaler.apiPath" . | quote }}
           ports:
             - name: http
               containerPort: 3000
