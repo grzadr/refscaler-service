@@ -16,6 +16,8 @@ spec:
       labels:
         {{- include "refscaler.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: backend
+      annotations:
+        {{- include "refscaler.restartAnnotations" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}-backend

@@ -69,3 +69,10 @@ Create the backend service URL for the frontend to use
 {{- $port := .Values.backend.service.port | int -}}
 {{- printf "http://%s-%s:%d" (include "refscaler.fullname" .) "backend" $port -}}
 {{- end -}}
+
+{{/*
+Create annotations that force a restart when upgraded
+*/}}
+{{- define "refscaler.restartAnnotations" -}}
+kubernetes.io/restartedAt: {{ now | quote }}
+{{- end }}
