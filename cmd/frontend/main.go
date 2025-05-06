@@ -17,6 +17,7 @@ func main() {
 	// Initialize the HTML template engine
 	viewsPath := internal.DefaultEnv("VIEWS_PATH", "./assets/views")
 	staticPath := internal.DefaultEnv("STATIC_PATH", "./assets/static")
+	imgPath := internal.DefaultEnv("IMG_PATH", "./assets/img")
 
 	log.Printf("Using views path: %s", viewsPath)
 	log.Printf("Using static path: %s", staticPath)
@@ -29,6 +30,10 @@ func main() {
 
 	// Add logger middleware for better debugging
 	app.Use(logger.New())
+
+	app.Get("/favicon.svg", func(c *fiber.Ctx) error {
+		return c.SendFile(imgPath + "/favicon.svg")
+	})
 
 	// Serve static files
 	// app.Static("/static", staticPath)
