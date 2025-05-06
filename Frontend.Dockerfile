@@ -12,7 +12,8 @@ COPY assets/ ./assets/
 
 RUN CGO_ENABLED=0 GOOS=linux make build-frontend
 
-FROM gcr.io/distroless/base-debian12 AS build-release-stage
+# FROM gcr.io/distroless/base-debian12 AS build-release-stage
+FROM debian:stable-slim
 
 WORKDIR /
 
