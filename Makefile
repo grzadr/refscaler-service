@@ -47,7 +47,7 @@ build-image-service: lint
 build-image-frontend: lint
 	docker build -t $(FRONTEND_IMAGE) --file Frontend.Dockerfile .
 
-build-images: build-image-service
+build-images: build-image-service build-image-frontend
 
 kind-upload: build-images
 	kind load docker-image $(SERVICE_IMAGE)
